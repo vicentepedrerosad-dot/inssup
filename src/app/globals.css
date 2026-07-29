@@ -1,26 +1,131 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   INSSUP — Sistema de diseño operacional
+   Estilo ejecutivo, sobrio. Fondo claro profesional, sidebar petróleo oscuro.
+--------------------------------------------------------------------------- */
+
+@theme {
+  --color-brand-50: #ecfeff;
+  --color-brand-100: #cffafe;
+  --color-brand-200: #a5f3fc;
+  --color-brand-300: #67e8f9;
+  --color-brand-400: #22d3ee;
+  --color-brand-500: #06b6d4;
+  --color-brand-600: #0e7490;
+  --color-brand-700: #0b5a70;
+  --color-brand-800: #0a4a5c;
+  --color-brand-900: #0b3a48;
+  --color-brand-950: #082733;
+
+  /* Superficie del panel lateral (petróleo profundo) */
+  --color-panel: #0b2933;
+  --color-panel-fg: #cbd5e1;
+  --color-panel-muted: #64879099;
+
+  /* Estados operacionales */
+  --color-status-done: #16a34a;   /* terminado  */
+  --color-status-run: #d97706;    /* ejecución  */
+  --color-status-late: #dc2626;   /* atrasado   */
+  --color-status-pending: #64748b;/* pendiente  */
+  --color-status-sched: #2563eb;  /* programado */
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f1f5f9;
+  --surface: #ffffff;
+  --foreground: #0f172a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html,
+body {
+  height: 100%;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Scrollbars discretas */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Números tabulares para métricas y tablas */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Utilidad: ocultar scrollbar (carruseles horizontales) */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Leaflet: encaje con el diseño */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background: #e2e8f0;
+}
+.leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(2, 20, 27, 0.18);
+}
+.leaflet-popup-content {
+  margin: 12px 14px;
+}
+.leaflet-bar a,
+.leaflet-control-zoom a {
+  color: #0b3a48 !important;
+}
+
+/* Animación de entrada sutil para paneles */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-up {
+  animation: fade-up 0.35s ease both;
+}
+
+/* Marcador de mapa pulsante para alertas críticas */
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.55);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
 }
