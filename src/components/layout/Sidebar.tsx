@@ -2,16 +2,16 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { visibleNav } from "./nav";
-import { RoleSwitcher } from "./RoleSwitcher";
+import { UserMenu } from "./UserMenu";
 import { cn } from "@/lib/utils";
 import { InssupLogo } from "./InssupLogo";
 
 export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   const pathname = usePathname();
-  const { currentUser } = useStore();
-  const items = visibleNav(currentUser.role);
+  const { user, hasPermission } = useAuth();
+  const items = visibleNav(user?.role ?? "tecnico", hasPermission);
   const sections = ["Operación", "Comercial", "Administración"] as const;
 
   const isActive = (href: string, exact?: boolean) =>
@@ -84,9 +84,9 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
         </div>
       </div>
 
-      {/* Selector de rol */}
+      {/* Usuario / sesión */}
       <div className="border-t border-white/10 p-2">
-        <RoleSwitcher dark />
+        <UserMenu dark />
       </div>
     </div>
   );

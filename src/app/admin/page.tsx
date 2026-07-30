@@ -19,6 +19,7 @@ import { SiteFormModal } from "@/components/admin/SiteFormModal";
 import { CrewFormModal } from "@/components/admin/CrewFormModal";
 import { ProjectFormModal } from "@/components/project/ProjectFormModal";
 import { BitacoraView } from "@/components/admin/BitacoraView";
+import { UsersManager } from "@/components/admin/UsersManager";
 import {
   ShieldCheck,
   ShieldX,
@@ -26,6 +27,7 @@ import {
   RadioTower,
   FolderKanban,
   Users,
+  UserCog,
   History,
   Plus,
   Pencil,
@@ -35,14 +37,14 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
-type Tab = "empresas" | "sitios" | "proyectos" | "cuadrillas" | "bitacora";
+type Tab = "usuarios" | "empresas" | "sitios" | "proyectos" | "cuadrillas" | "bitacora";
 type DelTarget = { kind: Tab; id: string; name: string } | null;
 
 export default function AdminPage() {
   const store = useStore();
-  const { canAdmin, currentUser, clients, sites, projects, crews, auditLog } = store;
+  const { canAdmin, currentUser, clients, sites, projects, crews } = store;
   const clientMap = useClientMap();
-  const [tab, setTab] = useState<Tab>("empresas");
+  const [tab, setTab] = useState<Tab>("usuarios");
   const [search, setSearch] = useState("");
 
   // Modales
@@ -104,14 +106,15 @@ export default function AdminPage() {
           onChange={(t) => { setTab(t); setSearch(""); }}
           size="sm"
           options={[
+            { value: "usuarios", label: "Usuarios", icon: <UserCog className="size-4" /> },
             { value: "empresas", label: "Empresas", icon: <Building2 className="size-4" /> },
             { value: "sitios", label: "Sitios", icon: <RadioTower className="size-4" /> },
             { value: "proyectos", label: "Proyectos", icon: <FolderKanban className="size-4" /> },
             { value: "cuadrillas", label: "Cuadrillas", icon: <Users className="size-4" /> },
-            { value: "bitacora", label: `Bitácora (${auditLog.length})`, icon: <History className="size-4" /> },
+            { value: "bitacora", label: "Bitácora", icon: <History className="size-4" /> },
           ]}
         />
-        {tab !== "bitacora" && (
+        {tab !== "bitacora" && tab !== "usuarios" && (
           <div className="flex items-center gap-2">
             {tab === "sitios" && (
               <div className="relative">
@@ -264,11 +267,14 @@ export default function AdminPage() {
         </Card>
       )}
 
+      {/* USUARIOS */}
+      {tab === "usuarios" && <UsersManager />}
+
       {/* BITÁCORA */}
       {tab === "bitacora" && <BitacoraView />}
 
       {/* Zona de datos */}
-      {tab !== "bitacora" && (
+      {tab !== "bitacora" && tab !== "usuarios" && (
         <div className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3.5 py-2.5">
           <p className="text-xs text-slate-500">
             Todos los cambios quedan registrados en la <b>Bitácora</b> con autor, fecha y hora.

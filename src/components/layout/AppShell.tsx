@@ -7,7 +7,7 @@ import { NAV_ITEMS } from "./nav";
 import { Menu, X, CalendarDays } from "lucide-react";
 import { InssupLogo } from "./InssupLogo";
 import { formatDate, TODAY } from "@/lib/utils";
-import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
 import { ROLE } from "@/lib/status";
 import { Avatar } from "@/components/ui/misc";
 
@@ -22,7 +22,7 @@ function currentTitle(pathname: string): string {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const { currentUser } = useStore();
+  const { user } = useAuth();
   const title = currentTitle(pathname);
 
   return (
@@ -82,13 +82,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-1 sm:pl-2">
             <div className="hidden text-right sm:block">
               <p className="text-xs font-medium leading-tight text-slate-800">
-                {currentUser.name}
+                {user?.name}
               </p>
               <p className="text-[11px] leading-tight text-slate-500">
-                {ROLE[currentUser.role].label}
+                {user ? ROLE[user.role].label : ""}
               </p>
             </div>
-            <Avatar name={currentUser.name} size={32} />
+            <Avatar name={user?.name ?? "?"} size={32} />
           </div>
         </header>
 

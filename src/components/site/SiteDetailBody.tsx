@@ -22,6 +22,7 @@ import { Segmented } from "@/components/ui/Segmented";
 import { DefRow, Stat } from "@/components/ui/misc";
 import { EvidenceThumb } from "./EvidenceThumb";
 import { ActivityTimeline } from "./ActivityTimeline";
+import { PriceGate } from "@/components/Money";
 import {
   Building2,
   FolderKanban,
@@ -229,22 +230,24 @@ export function SiteDetailBody({ siteId }: { siteId: string }) {
               <Progress value={site.progress} showLabel />
             </div>
 
-            {/* Financiero */}
-            <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
-              <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
-                <Wallet className="size-3.5" /> Ficha financiera del sitio
+            {/* Financiero (solo con acceso a precios) */}
+            <PriceGate>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+                <div className="mb-2 flex items-center gap-1.5 text-xs font-semibold text-slate-500">
+                  <Wallet className="size-3.5" /> Ficha financiera del sitio
+                </div>
+                <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                  <Stat label="Ingreso" value={formatCLP(site.budget, { compact: true })} className="bg-white" />
+                  <Stat label="Costo est." value={formatCLP(site.cost, { compact: true })} className="bg-white" />
+                  <Stat label="Margen" value={formatCLP(margin, { compact: true })} className="bg-white" />
+                  <Stat
+                    label="Facturación"
+                    value={site.billed ? "Facturado" : "Pendiente"}
+                    className="bg-white"
+                  />
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <Stat label="Ingreso" value={formatCLP(site.budget, { compact: true })} className="bg-white" />
-                <Stat label="Costo est." value={formatCLP(site.cost, { compact: true })} className="bg-white" />
-                <Stat label="Margen" value={formatCLP(margin, { compact: true })} className="bg-white" />
-                <Stat
-                  label="Facturación"
-                  value={site.billed ? "Facturado" : "Pendiente"}
-                  className="bg-white"
-                />
-              </div>
-            </div>
+            </PriceGate>
 
             {site.observations && (
               <div>

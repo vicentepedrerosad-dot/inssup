@@ -13,6 +13,7 @@ import { Segmented } from "@/components/ui/Segmented";
 import { Input, Select } from "@/components/ui/Field";
 import { ProjectCard } from "@/components/project/ProjectCard";
 import { ProjectFormModal } from "@/components/project/ProjectFormModal";
+import { PriceGate } from "@/components/Money";
 import { KpiCard } from "@/components/KpiCard";
 import {
   Plus,
@@ -87,8 +88,10 @@ export default function ProyectosPage() {
 
       <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         <KpiCard label="Proyectos" value={filtered.length} icon={<FolderKanban className="size-4" />} tone="brand" accent />
-        <KpiCard label="Cartera total" value={formatCLP(totals.revenue, { compact: true })} icon={<Wallet className="size-4" />} tone="blue" accent />
-        <KpiCard label="Margen estimado" value={formatCLP(totals.margin, { compact: true })} icon={<TrendingUp className="size-4" />} tone="emerald" accent />
+        <PriceGate>
+          <KpiCard label="Cartera total" value={formatCLP(totals.revenue, { compact: true })} icon={<Wallet className="size-4" />} tone="blue" accent />
+          <KpiCard label="Margen estimado" value={formatCLP(totals.margin, { compact: true })} icon={<TrendingUp className="size-4" />} tone="emerald" accent />
+        </PriceGate>
         <KpiCard label="Sobre presupuesto" value={totals.overBudget} icon={<AlertTriangle className="size-4" />} tone={totals.overBudget ? "red" : "slate"} accent />
       </div>
 

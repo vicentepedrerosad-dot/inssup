@@ -15,6 +15,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { exportCSV, toCSV } from "@/lib/export";
+import { useCanSeePrices } from "@/components/Money";
 import {
   FileBarChart,
   FileSpreadsheet,
@@ -32,6 +33,7 @@ export default function ReportesPage() {
   const { sites, projects, crews } = useStore();
   const clientMap = useClientMap();
   const crewMap = useCrewMap();
+  const canPrices = useCanSeePrices();
 
   const stats = useMemo(() => computeSiteStats(sites), [sites]);
   const crewPerf = useMemo(() => computeCrewPerformance(sites, crews), [sites, crews]);
@@ -72,9 +74,13 @@ export default function ReportesPage() {
           { indicador: "Sitios atrasados", valor: stats.atrasado },
           { indicador: "Avance general (%)", valor: stats.avgProgress },
           { indicador: "Horas trabajadas", valor: stats.totalHours },
-          { indicador: "Ingresos proyectados", valor: stats.expectedRevenue },
-          { indicador: "Ingresos facturados", valor: stats.billedRevenue },
-          { indicador: "Margen estimado", valor: stats.estimatedMargin },
+          ...(canPrices
+            ? [
+                { indicador: "Ingresos proyectados", valor: stats.expectedRevenue },
+                { indicador: "Ingresos facturados", valor: stats.billedRevenue },
+                { indicador: "Margen estimado", valor: stats.estimatedMargin },
+              ]
+            : []),
         ];
         exportCSV("inssup-reporte-ejecutivo.csv", toCSV(rows));
       },
@@ -210,7 +216,7 @@ export default function ReportesPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-        {reports.map((r) => {
+        {reports.filter((r) => canPrices || r.id !== "financiero").map((r) => {
           const Icon = r.icon;
           return (
             <Card key={r.id} className="flex flex-col p-4">

@@ -13,6 +13,7 @@ import { Badge, ProjectStatusBadge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/Progress";
 import { Avatar, DefRow } from "@/components/ui/misc";
 import { HBarChart } from "@/components/charts/Charts";
+import { Money, PriceGate } from "@/components/Money";
 import {
   Building2,
   Wallet,
@@ -64,12 +65,15 @@ export default function ClientesPage() {
 
       <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
         <KpiCard label="Clientes" value={clients.length} icon={<Building2 className="size-4" />} tone="brand" accent />
-        <KpiCard label="Ingresos cartera" value={formatCLP(totalRevenue, { compact: true })} icon={<Wallet className="size-4" />} tone="blue" accent />
-        <KpiCard label="Facturado" value={formatCLP(totalBilled, { compact: true })} icon={<CheckCircle2 className="size-4" />} tone="emerald" accent hint={totalRevenue ? `${formatPct(Math.round((totalBilled / totalRevenue) * 100))} recaudado` : undefined} />
+        <PriceGate>
+          <KpiCard label="Ingresos cartera" value={formatCLP(totalRevenue, { compact: true })} icon={<Wallet className="size-4" />} tone="blue" accent />
+          <KpiCard label="Facturado" value={formatCLP(totalBilled, { compact: true })} icon={<CheckCircle2 className="size-4" />} tone="emerald" accent hint={totalRevenue ? `${formatPct(Math.round((totalBilled / totalRevenue) * 100))} recaudado` : undefined} />
+        </PriceGate>
         <KpiCard label="Sitios atrasados" value={totalOverdue} icon={<AlertTriangle className="size-4" />} tone={totalOverdue ? "red" : "slate"} accent />
       </div>
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <PriceGate>
         <Card className="lg:col-span-2">
           <CardHeader title="Ingresos por cliente" subtitle="Cartera total (CLP)" icon={<Wallet className="size-4" />} />
           <div className="p-4">
@@ -81,6 +85,7 @@ export default function ClientesPage() {
             />
           </div>
         </Card>
+        </PriceGate>
         <Card>
           <CardHeader title="Cumplimiento por cliente" subtitle="% sitios dentro de SLA" />
           <div className="divide-y divide-slate-100">
@@ -142,10 +147,10 @@ export default function ClientesPage() {
             </div>
 
             <DefRow label="Ingresos cartera" icon={<Wallet className="size-3.5" />}>
-              {formatCLP(activeRollup.revenue)}
+              <Money value={activeRollup.revenue} />
             </DefRow>
             <DefRow label="Facturado">
-              {formatCLP(activeRollup.billed)}
+              <Money value={activeRollup.billed} />
             </DefRow>
             <DefRow label="Cumplimiento SLA">
               <span className={cn(activeRollup.onTimeRate < 70 && "text-red-600")}>
@@ -232,7 +237,7 @@ function ClientCard({ rollup, onClick }: { rollup: ClientRollup; onClick: () => 
           {rollup.avgProgress}% avance
         </div>
         <span className="tabular text-sm font-semibold text-slate-800">
-          {formatCLP(rollup.revenue, { compact: true })}
+          <Money value={rollup.revenue} compact />
         </span>
       </div>
     </button>

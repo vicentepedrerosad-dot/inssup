@@ -20,6 +20,7 @@ import { ActivityTimeline } from "@/components/site/ActivityTimeline";
 import { ProjectFormModal } from "@/components/project/ProjectFormModal";
 import { SiteDrawer } from "@/components/site/SiteDrawer";
 import { DonutChart } from "@/components/charts/Charts";
+import { PriceGate } from "@/components/Money";
 import { Table, THead, TBody, TR, TD, TH } from "@/components/ui/Table";
 import {
   ArrowLeft,
@@ -109,6 +110,7 @@ export default function ProjectDetailPage() {
 
       {/* Resumen financiero */}
       <div className="grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+        <PriceGate>
         <Card className="p-3.5">
           <p className="text-xs font-medium text-slate-500">Ingresos esperados</p>
           <p className="tabular mt-1 text-xl font-bold text-slate-900">
@@ -134,6 +136,7 @@ export default function ProjectDetailPage() {
           </p>
           <p className="mt-0.5 text-xs text-slate-400">{marginPct}% sobre ingreso</p>
         </Card>
+        </PriceGate>
         <Card className="p-3.5">
           <p className="text-xs font-medium text-slate-500">Avance total</p>
           <p className="tabular mt-1 text-xl font-bold text-slate-900">{progress}%</p>

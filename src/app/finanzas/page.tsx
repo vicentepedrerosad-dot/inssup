@@ -15,6 +15,9 @@ import { PageHeader } from "@/components/PageHeader";
 import { KpiCard } from "@/components/KpiCard";
 import { Card, CardHeader } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
+import { EmptyState } from "@/components/ui/misc";
+import { useAuth } from "@/lib/auth";
+import { ShieldX } from "lucide-react";
 import { HBarChart } from "@/components/charts/Charts";
 import { Table, THead, TBody, TR, TD, TH } from "@/components/ui/Table";
 import { exportCSV, toCSV } from "@/lib/export";
@@ -53,6 +56,7 @@ const LIGHT_META: Record<Light, { label: string; dot: string; text: string; bg: 
 
 export default function FinanzasPage() {
   const { sites, projects, crews } = useStore();
+  const { hasPermission } = useAuth();
   const clientMap = useClientMap();
 
   const stats = useMemo(() => computeSiteStats(sites), [sites]);
@@ -97,6 +101,18 @@ export default function FinanzasPage() {
     exportCSV("inssup-finanzas.csv", toCSV(rows));
     toast.success("Reporte financiero exportado", { description: `${rows.length} proyectos en CSV.` });
   };
+
+  if (!hasPermission("ver_finanzas")) {
+    return (
+      <Card className="mx-auto max-w-lg">
+        <EmptyState
+          icon={<ShieldX className="size-6" />}
+          title="Sin acceso a Finanzas"
+          description="Tu cuenta no tiene el acceso a información financiera. Solicítalo a un administrador o gerente."
+        />
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-4">

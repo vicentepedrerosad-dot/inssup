@@ -29,6 +29,7 @@ import {
   DonutChart,
 } from "@/components/charts/Charts";
 import { exportCSV, toCSV } from "@/lib/export";
+import { PriceGate } from "@/components/Money";
 import {
   RadioTower,
   CheckCircle2,
@@ -189,27 +190,29 @@ export default function DashboardPage() {
           accent
           hint="Promedio de sitios"
         />
-        <KpiCard
-          label="Ingresos proyectados"
-          value={formatCLP(stats.expectedRevenue, { compact: true })}
-          icon={<Wallet className="size-4" />}
-          tone="blue"
-          hint="Cartera total filtrada"
-        />
-        <KpiCard
-          label="Ingresos facturados"
-          value={formatCLP(stats.billedRevenue, { compact: true })}
-          icon={<ReceiptText className="size-4" />}
-          tone="emerald"
-          hint={stats.expectedRevenue ? `${formatPct(Math.round((stats.billedRevenue / stats.expectedRevenue) * 100))} recaudado` : "—"}
-        />
-        <KpiCard
-          label="Margen estimado"
-          value={formatCLP(stats.estimatedMargin, { compact: true })}
-          icon={<Wallet className="size-4" />}
-          tone="brand"
-          hint={stats.expectedRevenue ? `${formatPct(Math.round((stats.estimatedMargin / stats.expectedRevenue) * 100))} sobre ingreso` : "—"}
-        />
+        <PriceGate>
+          <KpiCard
+            label="Ingresos proyectados"
+            value={formatCLP(stats.expectedRevenue, { compact: true })}
+            icon={<Wallet className="size-4" />}
+            tone="blue"
+            hint="Cartera total filtrada"
+          />
+          <KpiCard
+            label="Ingresos facturados"
+            value={formatCLP(stats.billedRevenue, { compact: true })}
+            icon={<ReceiptText className="size-4" />}
+            tone="emerald"
+            hint={stats.expectedRevenue ? `${formatPct(Math.round((stats.billedRevenue / stats.expectedRevenue) * 100))} recaudado` : "—"}
+          />
+          <KpiCard
+            label="Margen estimado"
+            value={formatCLP(stats.estimatedMargin, { compact: true })}
+            icon={<Wallet className="size-4" />}
+            tone="brand"
+            hint={stats.expectedRevenue ? `${formatPct(Math.round((stats.estimatedMargin / stats.expectedRevenue) * 100))} sobre ingreso` : "—"}
+          />
+        </PriceGate>
         <KpiCard
           label="Horas trabajadas"
           value={formatNumber(stats.totalHours)}
@@ -306,16 +309,18 @@ export default function DashboardPage() {
           </CardBody>
         </Card>
 
-        <Card>
-          <CardHeader title="Ingresos por proyecto" subtitle="Cartera filtrada (top 8)" />
-          <CardBody>
-            <VBarChart
-              data={revenueByProject}
-              colorKey
-              valueFormatter={(v) => formatCLP(v, { compact: true })}
-            />
-          </CardBody>
-        </Card>
+        <PriceGate>
+          <Card>
+            <CardHeader title="Ingresos por proyecto" subtitle="Cartera filtrada (top 8)" />
+            <CardBody>
+              <VBarChart
+                data={revenueByProject}
+                colorKey
+                valueFormatter={(v) => formatCLP(v, { compact: true })}
+              />
+            </CardBody>
+          </Card>
+        </PriceGate>
 
         <Card>
           <CardHeader title="Retrasos por región" subtitle="Sitios sobre SLA" />

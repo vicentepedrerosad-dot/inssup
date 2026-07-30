@@ -7,6 +7,7 @@ import { projectProgress } from "@/lib/kpi";
 import { ProjectStatusBadge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/Progress";
 import { formatCLP, formatDate, daysUntil, cn } from "@/lib/utils";
+import { PriceGate } from "@/components/Money";
 import { CalendarClock, RadioTower, User, AlertTriangle } from "lucide-react";
 
 export function ProjectCard({
@@ -86,25 +87,27 @@ export function ProjectCard({
         )}
       </div>
 
-      <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5">
-        <div>
-          <p className="text-[10px] uppercase tracking-wide text-slate-400">Ingreso</p>
-          <p className="tabular text-sm font-semibold text-slate-800">
-            {formatCLP(project.expectedRevenue, { compact: true })}
-          </p>
+      <PriceGate>
+        <div className="mt-3 flex items-center justify-between border-t border-slate-100 pt-2.5">
+          <div>
+            <p className="text-[10px] uppercase tracking-wide text-slate-400">Ingreso</p>
+            <p className="tabular text-sm font-semibold text-slate-800">
+              {formatCLP(project.expectedRevenue, { compact: true })}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="text-[10px] uppercase tracking-wide text-slate-400">Margen</p>
+            <p
+              className={cn(
+                "tabular text-sm font-semibold",
+                overBudget ? "text-red-600" : "text-emerald-600",
+              )}
+            >
+              {marginPct}%
+            </p>
+          </div>
         </div>
-        <div className="text-right">
-          <p className="text-[10px] uppercase tracking-wide text-slate-400">Margen</p>
-          <p
-            className={cn(
-              "tabular text-sm font-semibold",
-              overBudget ? "text-red-600" : "text-emerald-600",
-            )}
-          >
-            {marginPct}%
-          </p>
-        </div>
-      </div>
+      </PriceGate>
     </Link>
   );
 }
