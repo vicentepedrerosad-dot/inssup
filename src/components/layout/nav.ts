@@ -10,6 +10,7 @@ import {
   Wallet,
   FileBarChart,
   ShieldCheck,
+  Truck,
   type LucideIcon,
 } from "lucide-react";
 
@@ -31,6 +32,7 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/clientes", label: "Clientes", icon: Building2, section: "Comercial", permission: "ver_clientes" },
   { href: "/finanzas", label: "Finanzas", icon: Wallet, section: "Comercial", permission: "ver_finanzas" },
   { href: "/reportes", label: "Reportes", icon: FileBarChart, section: "Comercial", permission: "ver_reportes" },
+  { href: "/camionetas", label: "Camionetas", icon: Truck, section: "Administración", permission: "ver_camionetas" },
   { href: "/admin", label: "Administración", icon: ShieldCheck, section: "Administración", permission: "gestionar_usuarios" },
 ];
 

@@ -24,7 +24,7 @@ const ACTION_META: Record<string, { label: string; icon: typeof Plus; cls: strin
 
 const ENTITY_LABEL: Record<string, string> = {
   sitio: "Sitio", proyecto: "Proyecto", cliente: "Empresa",
-  cuadrilla: "Cuadrilla", usuario: "Usuario", config: "Configuración",
+  cuadrilla: "Cuadrilla", usuario: "Usuario", camioneta: "Camioneta", config: "Configuración",
 };
 
 export function BitacoraView() {

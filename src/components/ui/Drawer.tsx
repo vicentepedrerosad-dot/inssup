@@ -35,7 +35,7 @@ export function Drawer({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end">
+    <div className="fixed inset-0 z-[1100] flex justify-end">
       <div
         className="absolute inset-0 bg-slate-900/40 backdrop-blur-[1px] animate-[fade-up_.2s_ease]"
         onClick={onClose}

@@ -142,7 +142,14 @@ export interface UserProfile {
 /* ---------------------------- Bitácora de auditoría ----------------------- */
 
 export type AuditAction = "crear" | "editar" | "eliminar" | "estado" | "avance";
-export type AuditEntity = "sitio" | "proyecto" | "cliente" | "cuadrilla" | "config";
+export type AuditEntity =
+  | "sitio"
+  | "proyecto"
+  | "cliente"
+  | "cuadrilla"
+  | "usuario"
+  | "camioneta"
+  | "config";
 
 export interface AuditChange {
   field: string; // etiqueta legible del campo

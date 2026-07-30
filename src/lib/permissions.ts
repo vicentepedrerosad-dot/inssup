@@ -13,6 +13,7 @@ export type Permission =
   | "ver_precios"
   | "ver_finanzas"
   | "ver_reportes"
+  | "ver_camionetas"
   | "ver_bitacora"
   | "gestionar_usuarios";
 
@@ -35,6 +36,7 @@ export const PERMISSIONS: PermissionDef[] = [
   { key: "ver_precios", label: "Ver precios e ingresos", description: "Montos, ingresos, costos y márgenes", group: "Comercial" },
   { key: "ver_finanzas", label: "Ver finanzas", description: "Módulo financiero completo", group: "Comercial" },
   { key: "ver_reportes", label: "Ver reportes", description: "Generar y exportar reportes", group: "Comercial" },
+  { key: "ver_camionetas", label: "Ver camionetas", description: "Flota, patentes y revisión técnica", group: "Administración" },
   { key: "ver_bitacora", label: "Ver bitácora", description: "Registro de auditoría de cambios", group: "Administración" },
   { key: "gestionar_usuarios", label: "Gestionar usuarios", description: "Crear usuarios y asignar accesos", group: "Administración" },
 ];

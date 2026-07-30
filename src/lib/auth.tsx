@@ -17,6 +17,7 @@ import {
   type AuthUser,
   type Permission,
 } from "./permissions";
+import type { Vehicle } from "./vehicles";
 import type { UserRole } from "./types";
 
 const TOKEN_KEY = "inssup:token:v1";
@@ -57,6 +58,20 @@ interface AuthValue {
   // Bitácora
   logAudit: (input: AuditInput) => void;
   listAudit: () => Promise<AuditRow[]>;
+  // Camionetas / flota
+  listVehicles: () => Promise<Vehicle[]>;
+  upsertVehicle: (v: {
+    id?: string;
+    patente: string;
+    marca: string;
+    modelo: string;
+    anio: number | null;
+    tipo: string;
+    lastRevision: string | null;
+    notes: string;
+    active: boolean;
+  }) => Promise<{ error?: string }>;
+  deleteVehicle: (id: string) => Promise<{ error?: string }>;
 }
 
 export interface AuditRow {
@@ -255,6 +270,43 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return res?.entries ?? [];
   }, []);
 
+  const listVehicles = useCallback<AuthValue["listVehicles"]>(async () => {
+    const token = tokenRef.current;
+    if (!token) return [];
+    const { data } = await supabase.rpc("list_vehicles", { p_token: token });
+    const res = data as { vehicles?: Vehicle[]; error?: string };
+    return res?.vehicles ?? [];
+  }, []);
+
+  const upsertVehicle = useCallback<AuthValue["upsertVehicle"]>(async (v) => {
+    const token = tokenRef.current;
+    if (!token) return { error: "Sesión expirada" };
+    const { data, error } = await supabase.rpc("upsert_vehicle", {
+      p_token: token,
+      p_id: v.id ?? null,
+      p_patente: v.patente,
+      p_marca: v.marca,
+      p_modelo: v.modelo,
+      p_anio: v.anio,
+      p_tipo: v.tipo,
+      p_last_revision: v.lastRevision,
+      p_notes: v.notes,
+      p_active: v.active,
+    });
+    if (error) return { error: "Error de conexión" };
+    const res = data as { error?: string };
+    return res.error ? { error: res.error } : {};
+  }, []);
+
+  const deleteVehicle = useCallback<AuthValue["deleteVehicle"]>(async (id) => {
+    const token = tokenRef.current;
+    if (!token) return { error: "Sesión expirada" };
+    const { data, error } = await supabase.rpc("delete_vehicle", { p_token: token, p_id: id });
+    if (error) return { error: "Error de conexión" };
+    const res = data as { error?: string };
+    return res.error ? { error: res.error } : {};
+  }, []);
+
   const value = useMemo<AuthValue>(
     () => ({
       user,
@@ -271,8 +323,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUserPassword,
       logAudit,
       listAudit,
+      listVehicles,
+      upsertVehicle,
+      deleteVehicle,
     }),
-    [user, status, login, logout, changeMyPassword, refreshMe, listUsers, createUser, updateUser, setUserPassword, logAudit, listAudit],
+    [user, status, login, logout, changeMyPassword, refreshMe, listUsers, createUser, updateUser, setUserPassword, logAudit, listAudit, listVehicles, upsertVehicle, deleteVehicle],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
