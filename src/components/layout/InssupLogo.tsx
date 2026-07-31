@@ -16,7 +16,9 @@ export function InssupLogo({
   size?: "sm" | "md";
   className?: string;
 }) {
-  const ins = theme === "dark" ? "text-brand-400" : "text-[#1e56b3]";
+  // "INS" siempre azul marino, igual en claro/oscuro y en PC/móvil.
+  const ins = "text-[#2f6be0]";
+  // "SUP" adaptativo: blanco sobre fondos oscuros, negro sobre claros.
   const sup = theme === "dark" ? "text-white" : "text-slate-900";
   const ltda = theme === "dark" ? "text-slate-400" : "text-slate-500";
   const tag = theme === "dark" ? "text-slate-400" : "text-slate-500";
