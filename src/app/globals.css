@@ -76,14 +76,103 @@ body {
   font-feature-settings: "tnum";
 }
 
-/* Modo blanco y negro: escala de grises en toda la app (incluye mapa y gráficos).
-   Se aplica sobre <html>, cuyo box cubre el viewport, por lo que los modales
-   con position:fixed siguen posicionándose correctamente. */
-html.theme-bw {
-  filter: grayscale(1) contrast(1.02);
+/* ===========================================================================
+   MODO OSCURO
+   Se activa con la clase .dark en <html>. En vez de tocar cada componente,
+   redefinimos las utilidades de color neutras que usa la app. (bg-white y
+   text-white son clases distintas, así que las superficies se oscurecen sin
+   afectar el texto blanco sobre botones/sidebar.)
+=========================================================================== */
+.dark {
+  color-scheme: dark;
+  --background: #0b1120;
 }
-html.theme-bw .leaflet-tile {
-  filter: grayscale(1);
+
+/* Superficies */
+.dark .bg-white { background-color: #151d2e; }
+.dark .bg-white\/90 { background-color: rgba(19, 27, 43, 0.85); }
+.dark .bg-white\/95 { background-color: rgba(19, 27, 43, 0.9); }
+.dark .bg-slate-50 { background-color: #1a2334; }
+.dark .bg-slate-50\/80 { background-color: rgba(26, 35, 52, 0.7); }
+.dark .bg-slate-50\/70 { background-color: rgba(26, 35, 52, 0.6); }
+.dark .bg-slate-50\/60 { background-color: rgba(26, 35, 52, 0.5); }
+.dark .bg-slate-100 { background-color: #0d1526; }
+.dark .bg-slate-200 { background-color: #26324a; }
+
+/* Texto (se aclara). No tocamos slate-300/200/100 → ya se usan claros sobre
+   superficies oscuras como el sidebar. */
+.dark .text-slate-900 { color: #f1f5f9; }
+.dark .text-slate-800 { color: #e6ebf2; }
+.dark .text-slate-700 { color: #cdd7e3; }
+.dark .text-slate-600 { color: #a3b1c4; }
+.dark .text-slate-500 { color: #8695aa; }
+.dark .text-slate-400 { color: #6a7789; }
+.dark .placeholder\:text-slate-400::placeholder { color: #5c6b7e; }
+
+/* Bordes y divisores */
+.dark .border-slate-200 { border-color: #27324a; }
+.dark .border-slate-100 { border-color: #1e2839; }
+.dark .border-slate-300 { border-color: #35435d; }
+.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) { border-color: #1e2839; }
+.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) { border-color: #27324a; }
+
+/* Rings sutiles */
+.dark .ring-slate-200 { --tw-ring-color: rgba(148, 163, 184, 0.16); }
+.dark .ring-slate-300 { --tw-ring-color: rgba(148, 163, 184, 0.2); }
+
+/* Hover */
+.dark .hover\:bg-slate-100:hover { background-color: #202b40; }
+.dark .hover\:bg-slate-50:hover { background-color: #1a2334; }
+.dark .hover\:bg-slate-50\/70:hover { background-color: rgba(32, 43, 64, 0.55); }
+.dark .hover\:bg-red-50:hover { background-color: rgba(239, 68, 68, 0.14); }
+.dark .hover\:border-brand-300:hover { border-color: rgba(34, 211, 238, 0.4); }
+
+/* Chips / badges / alertas: fondos -50 tenues y textos más claros */
+.dark .bg-red-50 { background-color: rgba(239, 68, 68, 0.14); }
+.dark .bg-amber-50 { background-color: rgba(245, 158, 11, 0.14); }
+.dark .bg-emerald-50 { background-color: rgba(16, 185, 129, 0.14); }
+.dark .bg-blue-50 { background-color: rgba(59, 130, 246, 0.14); }
+.dark .bg-sky-50 { background-color: rgba(14, 165, 233, 0.14); }
+.dark .bg-brand-50 { background-color: rgba(14, 116, 144, 0.2); }
+.dark .bg-brand-50\/60 { background-color: rgba(14, 116, 144, 0.16); }
+.dark .bg-emerald-50\/60 { background-color: rgba(16, 185, 129, 0.12); }
+.dark .bg-brand-100 { background-color: rgba(34, 211, 238, 0.16); }
+.dark .bg-emerald-100 { background-color: rgba(16, 185, 129, 0.16); }
+.dark .bg-amber-100 { background-color: rgba(245, 158, 11, 0.16); }
+.dark .bg-blue-100 { background-color: rgba(59, 130, 246, 0.16); }
+.dark .bg-violet-100 { background-color: rgba(139, 92, 246, 0.16); }
+.dark .bg-rose-100 { background-color: rgba(244, 63, 94, 0.16); }
+.dark .text-emerald-700, .dark .text-emerald-600 { color: #34d399; }
+.dark .text-amber-800, .dark .text-amber-700, .dark .text-amber-600 { color: #fbbf24; }
+.dark .text-red-700, .dark .text-red-600 { color: #f87171; }
+.dark .text-blue-700, .dark .text-blue-600 { color: #60a5fa; }
+.dark .text-sky-700, .dark .text-sky-600 { color: #38bdf8; }
+.dark .text-brand-700, .dark .text-brand-600 { color: #22d3ee; }
+.dark .text-violet-700 { color: #a78bfa; }
+.dark .text-rose-700 { color: #fb7185; }
+
+/* Gráficos (Recharts) */
+.dark .recharts-text { fill: #8695aa !important; }
+.dark .recharts-cartesian-grid line { stroke: #1e2839 !important; }
+.dark .recharts-label { fill: #cdd7e3 !important; }
+
+/* Mapa: oscurecer solo las tiles claras (CartoDB), no el satélite */
+.dark .lite-tiles {
+  filter: invert(1) hue-rotate(180deg) brightness(0.92) contrast(0.95);
+}
+.dark .leaflet-container {
+  background: #0d1526;
+}
+.dark .leaflet-popup-content-wrapper,
+.dark .leaflet-popup-tip {
+  background: #151d2e;
+  color: #e6ebf2;
+}
+.dark .leaflet-bar a,
+.dark .leaflet-control-zoom a {
+  background: #151d2e;
+  color: #cdd7e3 !important;
+  border-color: #27324a;
 }
 
 /* Utilidad: ocultar scrollbar (carruseles horizontales) */

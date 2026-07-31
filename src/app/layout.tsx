@@ -52,7 +52,7 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if(localStorage.getItem('inssup:bw')==='1'){document.documentElement.classList.add('theme-bw')}}catch(e){}",
+              "try{if(localStorage.getItem('inssup:theme')==='dark'){document.documentElement.classList.add('dark')}}catch(e){}",
           }}
         />
         <AuthProvider>

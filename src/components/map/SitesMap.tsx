@@ -97,6 +97,7 @@ export function SitesMap({
         attribution: '&copy; <a href="https://carto.com/">CARTO</a> · &copy; OpenStreetMap',
         subdomains: "abcd",
         maxZoom: 18,
+        className: "lite-tiles",
       }).addTo(map);
 
       layerRef.current = L.layerGroup().addTo(map);
@@ -139,6 +140,7 @@ export function SitesMap({
         attribution: "&copy; CARTO · OpenStreetMap",
         subdomains: "abcd",
         maxZoom: 18,
+        className: "lite-tiles",
       }).addTo(map);
     }
     baseRef.current.bringToBack();

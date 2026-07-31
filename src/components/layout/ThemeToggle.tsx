@@ -1,26 +1,26 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Contrast } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const KEY = "inssup:bw";
+const KEY = "inssup:theme";
 
-/** Interruptor de modo blanco y negro (escala de grises en toda la app). */
+/** Interruptor de modo oscuro (dark mode) para toda la app. */
 export function ThemeToggle() {
-  const [bw, setBw] = useState(false);
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setBw(document.documentElement.classList.contains("theme-bw"));
+    setDark(document.documentElement.classList.contains("dark"));
   }, []);
 
   const toggle = () => {
-    const next = !bw;
-    setBw(next);
-    document.documentElement.classList.toggle("theme-bw", next);
+    const next = !dark;
+    setDark(next);
+    document.documentElement.classList.toggle("dark", next);
     try {
-      localStorage.setItem(KEY, next ? "1" : "0");
+      localStorage.setItem(KEY, next ? "dark" : "light");
     } catch {
       /* noop */
     }
@@ -29,14 +29,16 @@ export function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      aria-pressed={bw}
-      title={bw ? "Volver a color" : "Modo blanco y negro"}
+      aria-pressed={dark}
+      title={dark ? "Modo claro" : "Modo oscuro"}
       className={cn(
         "grid size-9 place-items-center rounded-lg transition-colors",
-        bw ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100",
+        dark
+          ? "bg-white/10 text-amber-300 hover:bg-white/15"
+          : "text-slate-600 hover:bg-slate-100",
       )}
     >
-      <Contrast className="size-4.5" />
+      {dark ? <Sun className="size-4.5" /> : <Moon className="size-4.5" />}
     </button>
   );
 }

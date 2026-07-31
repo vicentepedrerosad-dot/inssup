@@ -119,7 +119,7 @@ export function LocationPicker({
       baseRef.current = L.tileLayer(SAT_URL, { attribution: "Imagery &copy; Esri", maxZoom: 19 }).addTo(map);
       labelsRef.current = L.tileLayer(LABELS_URL, { maxZoom: 19 }).addTo(map);
     } else {
-      baseRef.current = L.tileLayer(STREETS_URL, { attribution: "&copy; CARTO · OSM", subdomains: "abcd", maxZoom: 19 }).addTo(map);
+      baseRef.current = L.tileLayer(STREETS_URL, { attribution: "&copy; CARTO · OSM", subdomains: "abcd", maxZoom: 19, className: "lite-tiles" }).addTo(map);
       labelsRef.current = null;
     }
     setBase(next);
