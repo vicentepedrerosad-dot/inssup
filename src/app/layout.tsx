@@ -49,6 +49,12 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if(localStorage.getItem('inssup:bw')==='1'){document.documentElement.classList.add('theme-bw')}}catch(e){}",
+          }}
+        />
         <AuthProvider>
           <AuthGate>
             <StoreProvider>

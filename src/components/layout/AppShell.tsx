@@ -10,6 +10,7 @@ import { formatDate, TODAY } from "@/lib/utils";
 import { useAuth } from "@/lib/auth";
 import { ROLE } from "@/lib/status";
 import { Avatar } from "@/components/ui/misc";
+import { ThemeToggle } from "./ThemeToggle";
 
 function currentTitle(pathname: string): string {
   if (pathname === "/") return "Dashboard Ejecutivo";
@@ -73,6 +74,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               {title}
             </h1>
           </div>
+
+          <ThemeToggle />
 
           <div className="hidden items-center gap-1.5 rounded-lg bg-slate-100 px-2.5 py-1.5 text-xs font-medium text-slate-600 sm:flex">
             <CalendarDays className="size-3.5 text-slate-400" />

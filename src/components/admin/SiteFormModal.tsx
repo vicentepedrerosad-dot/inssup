@@ -5,7 +5,7 @@ import { useStore } from "@/lib/store";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { Input, Select, Textarea, FieldGroup } from "@/components/ui/Field";
-import { REGIONS } from "@/lib/data";
+import { REGIONS, CHILE_LOCATIONS } from "@/lib/data";
 import { SUPERVISORS } from "@/lib/data/entities";
 import {
   WORK_TYPE,
@@ -14,10 +14,17 @@ import {
 } from "@/lib/status";
 import type { Site, SiteStatus, Priority, WorkType } from "@/lib/types";
 import { TODAY } from "@/lib/utils";
+import { LocationPicker } from "@/components/map/LocationPicker";
 import { toast } from "sonner";
 
 const WORK_TYPES = Object.keys(WORK_TYPE) as WorkType[];
 const PRIORITIES: Priority[] = ["baja", "media", "alta", "critica"];
+
+/** Centro aproximado de una región para posicionar el mapa al crear un sitio. */
+function regionCenter(region: string): { lat: number; lng: number } {
+  const loc = CHILE_LOCATIONS.find((l) => l.region === region);
+  return loc ? { lat: loc.lat, lng: loc.lng } : { lat: -33.45, lng: -70.66 };
+}
 
 export function SiteFormModal({
   open,
@@ -52,10 +59,17 @@ export function SiteFormModal({
     slaDate: site?.slaDate ?? TODAY,
     observations: site?.observations ?? "",
     blocker: site?.blocker ?? "",
-    lat: site?.lat ?? -33.45,
-    lng: site?.lng ?? -70.66,
+    lat: site?.lat ?? regionCenter(site?.region ?? REGIONS[0]).lat,
+    lng: site?.lng ?? regionCenter(site?.region ?? REGIONS[0]).lng,
   });
   const set = (patch: Partial<typeof form>) => setForm((f) => ({ ...f, ...patch }));
+
+  // Al cambiar de región en un sitio nuevo, recentrar el mapa a esa región.
+  const onRegion = (region: string) => {
+    if (editing) return set({ region });
+    const c = regionCenter(region);
+    set({ region, lat: c.lat, lng: c.lng });
+  };
 
   const submit = () => {
     if (!form.name.trim()) {
@@ -137,7 +151,7 @@ export function SiteFormModal({
           </Select>
         </FieldGroup>
         <FieldGroup label="Región">
-          <Select value={form.region} onChange={(e) => set({ region: e.target.value })}>
+          <Select value={form.region} onChange={(e) => onRegion(e.target.value)}>
             {REGIONS.map((r) => <option key={r} value={r}>{r}</option>)}
           </Select>
         </FieldGroup>
@@ -193,6 +207,16 @@ export function SiteFormModal({
             <input type="checkbox" checked={form.billed} onChange={(e) => set({ billed: e.target.checked })} className="size-4 accent-brand-600" />
             Facturado
           </label>
+        </div>
+        <div className="sm:col-span-2">
+          <label className="mb-1 block text-xs font-medium text-slate-600">
+            Ubicación en el mapa (satelital)
+          </label>
+          <LocationPicker
+            lat={form.lat}
+            lng={form.lng}
+            onChange={(lat, lng) => set({ lat, lng })}
+          />
         </div>
         <FieldGroup label="Observaciones" className="sm:col-span-2">
           <Textarea rows={2} value={form.observations} onChange={(e) => set({ observations: e.target.value })} />

@@ -1,10 +1,19 @@
 "use client";
 
 import "leaflet/dist/leaflet.css";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { Site } from "@/lib/types";
 import { SITE_STATUS, WORK_TYPE } from "@/lib/status";
-import type { Map as LeafletMap, CircleMarker, LayerGroup } from "leaflet";
+import { cn } from "@/lib/utils";
+import { Layers } from "lucide-react";
+import type { Map as LeafletMap, CircleMarker, LayerGroup, TileLayer } from "leaflet";
+
+const SAT_URL =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}";
+const LABELS_URL =
+  "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}";
+const STREETS_URL =
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 
 export function SitesMap({
   sites,
@@ -20,8 +29,11 @@ export function SitesMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const layerRef = useRef<LayerGroup | null>(null);
+  const baseRef = useRef<TileLayer | null>(null);
+  const labelsRef = useRef<TileLayer | null>(null);
   const selectRef = useRef(onSelect);
   const sitesRef = useRef(sites);
+  const [base, setBase] = useState<"mapa" | "satelite">("mapa");
   useEffect(() => {
     selectRef.current = onSelect;
     sitesRef.current = sites;
@@ -78,17 +90,14 @@ export function SitesMap({
         scrollWheelZoom: false,
         attributionControl: true,
         minZoom: 3,
-        maxZoom: 14,
+        maxZoom: 18,
       });
 
-      L.tileLayer(
-        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
-        {
-          attribution:
-            '&copy; <a href="https://carto.com/">CARTO</a> · &copy; OpenStreetMap',
-          subdomains: "abcd",
-        },
-      ).addTo(map);
+      baseRef.current = L.tileLayer(STREETS_URL, {
+        attribution: '&copy; <a href="https://carto.com/">CARTO</a> · &copy; OpenStreetMap',
+        subdomains: "abcd",
+        maxZoom: 18,
+      }).addTo(map);
 
       layerRef.current = L.layerGroup().addTo(map);
       mapRef.current = map;
@@ -110,14 +119,64 @@ export function SitesMap({
     renderMarkers();
   }, [sites, renderMarkers]);
 
+  const switchBase = useCallback(async (next: "mapa" | "satelite") => {
+    const L = (await import("leaflet")).default;
+    const map = mapRef.current;
+    if (!map || !baseRef.current) return;
+    map.removeLayer(baseRef.current);
+    if (labelsRef.current) {
+      map.removeLayer(labelsRef.current);
+      labelsRef.current = null;
+    }
+    if (next === "satelite") {
+      baseRef.current = L.tileLayer(SAT_URL, {
+        attribution: "Imagery &copy; Esri, Maxar, Earthstar Geographics",
+        maxZoom: 18,
+      }).addTo(map);
+      labelsRef.current = L.tileLayer(LABELS_URL, { maxZoom: 18 }).addTo(map);
+    } else {
+      baseRef.current = L.tileLayer(STREETS_URL, {
+        attribution: "&copy; CARTO · OpenStreetMap",
+        subdomains: "abcd",
+        maxZoom: 18,
+      }).addTo(map);
+    }
+    baseRef.current.bringToBack();
+    setBase(next);
+  }, []);
+
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      style={{ height, width: "100%" }}
-      role="application"
-      aria-label="Mapa de sitios de telecomunicaciones en Chile"
-    />
+    <div className="relative" style={{ height, width: "100%" }}>
+      <div
+        ref={containerRef}
+        className={className}
+        style={{ height: "100%", width: "100%" }}
+        role="application"
+        aria-label="Mapa de sitios de telecomunicaciones en Chile"
+      />
+      <div className="absolute right-2.5 top-2.5 z-[500] flex overflow-hidden rounded-lg border border-white/50 shadow-md">
+        <button
+          type="button"
+          onClick={() => switchBase("mapa")}
+          className={cn(
+            "px-2.5 py-1.5 text-xs font-medium transition-colors",
+            base === "mapa" ? "bg-brand-600 text-white" : "bg-white/90 text-slate-700 hover:bg-white",
+          )}
+        >
+          Mapa
+        </button>
+        <button
+          type="button"
+          onClick={() => switchBase("satelite")}
+          className={cn(
+            "flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium transition-colors",
+            base === "satelite" ? "bg-brand-600 text-white" : "bg-white/90 text-slate-700 hover:bg-white",
+          )}
+        >
+          <Layers className="size-3.5" /> Satélite
+        </button>
+      </div>
+    </div>
   );
 }
 

@@ -76,6 +76,16 @@ body {
   font-feature-settings: "tnum";
 }
 
+/* Modo blanco y negro: escala de grises en toda la app (incluye mapa y gráficos).
+   Se aplica sobre <html>, cuyo box cubre el viewport, por lo que los modales
+   con position:fixed siguen posicionándose correctamente. */
+html.theme-bw {
+  filter: grayscale(1) contrast(1.02);
+}
+html.theme-bw .leaflet-tile {
+  filter: grayscale(1);
+}
+
 /* Utilidad: ocultar scrollbar (carruseles horizontales) */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
