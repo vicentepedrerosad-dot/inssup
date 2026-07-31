@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { ROLE } from "@/lib/status";
 import { Avatar } from "@/components/ui/misc";
 import { ChangePasswordModal } from "@/components/auth/ChangePasswordModal";
-import { ChevronsUpDown, KeyRound, LogOut } from "lucide-react";
+import { ChevronsUpDown, KeyRound, LogOut, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function UserMenu({ dark = true }: { dark?: boolean }) {
@@ -57,6 +57,12 @@ export function UserMenu({ dark = true }: { dark?: boolean }) {
               className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
             >
               <KeyRound className="size-4 text-slate-400" /> Cambiar contraseña
+            </button>
+            <button
+              onClick={() => { window.dispatchEvent(new Event("inssup:install")); setOpen(false); }}
+              className="flex w-full items-center gap-2.5 px-3 py-2 text-left text-sm text-slate-700 hover:bg-slate-50"
+            >
+              <Download className="size-4 text-slate-400" /> Instalar app
             </button>
             <button
               onClick={() => { setOpen(false); logout(); }}

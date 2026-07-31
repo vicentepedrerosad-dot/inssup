@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { InssupLogo } from "@/components/layout/InssupLogo";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Field";
-import { Lock, User, Loader2, ShieldCheck, RadioTower } from "lucide-react";
+import { Lock, User, Loader2, ShieldCheck, RadioTower, Download } from "lucide-react";
 
 export function LoginScreen() {
   const { login } = useAuth();
@@ -116,7 +116,14 @@ export function LoginScreen() {
             </form>
           </div>
 
-          <p className="mt-4 text-center text-xs text-slate-400">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("inssup:install"))}
+            className="mx-auto mt-4 flex items-center gap-2 rounded-lg border border-white/15 bg-white/5 px-3.5 py-2 text-sm font-medium text-brand-100 transition-colors hover:bg-white/10"
+          >
+            <Download className="size-4" /> Instalar la app en tu teléfono
+          </button>
+          <p className="mt-3 text-center text-xs text-slate-400">
             ¿Problemas para entrar? Contacta a tu administrador INSSUP.
           </p>
         </div>
