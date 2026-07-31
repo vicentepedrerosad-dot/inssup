@@ -28,6 +28,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex h-dvh overflow-hidden bg-slate-100">
+      {/* Franja oscura tras la barra de estado (Isla Dinámica / notch) para que
+          el reloj y la batería (texto claro) siempre sean legibles. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-40 h-[env(safe-area-inset-top)] bg-panel" />
+
       {/* Sidebar desktop */}
       <aside className="hidden w-64 shrink-0 lg:block">
         <Sidebar />
@@ -43,7 +47,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           <div className="absolute inset-y-0 left-0 w-72 max-w-[85%] shadow-2xl animate-[fade-up_.2s_ease]">
             <button
               onClick={() => setMobileOpen(false)}
-              className="absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-lg text-slate-400 hover:bg-white/10"
+              className="absolute right-3 top-[calc(0.75rem+env(safe-area-inset-top))] z-10 grid size-8 place-items-center rounded-lg text-slate-400 hover:bg-white/10"
               aria-label="Cerrar menú"
             >
               <X className="size-5" />
@@ -55,8 +59,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
       {/* Contenido */}
       <div className="flex min-w-0 flex-1 flex-col">
-        {/* Topbar */}
-        <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-3 border-b border-slate-200 bg-white/90 px-3 backdrop-blur sm:px-5">
+        {/* Topbar — respeta la safe area superior (Isla Dinámica / notch iOS) */}
+        <header className="sticky top-0 z-30 flex h-[calc(3.5rem+env(safe-area-inset-top))] shrink-0 items-center gap-3 border-b border-slate-200 bg-white/90 px-3 pt-[env(safe-area-inset-top)] backdrop-blur sm:px-5">
           <button
             onClick={() => setMobileOpen(true)}
             className="grid size-9 place-items-center rounded-lg text-slate-600 hover:bg-slate-100 lg:hidden"
@@ -95,8 +99,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Main scrollable */}
-        <main className="flex-1 overflow-y-auto">
+        {/* Main scrollable — safe area inferior (indicador de inicio) y laterales */}
+        <main className="flex-1 overflow-y-auto pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
           <div className="mx-auto w-full max-w-[1600px] p-3 sm:p-5 lg:p-6">
             {children}
           </div>

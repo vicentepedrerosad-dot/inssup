@@ -18,7 +18,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
     exact ? pathname === href : pathname === href || pathname.startsWith(href + "/");
 
   return (
-    <div className="flex h-full flex-col bg-panel text-panel-fg">
+    <div className="flex h-full flex-col bg-panel pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] text-panel-fg">
       {/* Marca */}
       <div className="px-4 py-4">
         <InssupLogo theme="dark" />

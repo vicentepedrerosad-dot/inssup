@@ -58,7 +58,7 @@ export function LoginScreen() {
       </div>
 
       {/* Formulario */}
-      <div className="flex flex-1 items-center justify-center p-6">
+      <div className="flex flex-1 items-center justify-center p-6 pt-[max(1.5rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
         <div className="w-full max-w-sm">
           <div className="mb-6 flex items-center gap-2.5 lg:hidden">
             <div className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 text-white">

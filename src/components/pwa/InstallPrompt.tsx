@@ -98,7 +98,7 @@ export function InstallPrompt() {
   return (
     <>
       {showPill && (
-        <div className="fixed inset-x-0 bottom-3 z-[900] flex justify-center px-3 sm:bottom-4 sm:left-auto sm:right-4 sm:justify-end sm:px-0">
+        <div className="fixed inset-x-0 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-[900] flex justify-center px-3 sm:left-auto sm:right-4 sm:justify-end sm:px-0">
           <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-2 pl-3 shadow-xl dark:border-slate-700">
             <div className="grid size-9 shrink-0 place-items-center overflow-hidden rounded-xl">
               {/* eslint-disable-next-line @next/next/no-img-element */}
